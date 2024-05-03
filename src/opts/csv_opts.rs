@@ -63,16 +63,6 @@ impl FromStr for OutputFormat {
     }
 }
 
-// impl From<& str> for OutputFormat {
-//   fn from(s: &str) -> Self {
-//     match s.to_lowercase().as_str() {
-//       "json" => OutputFormat::Json,
-//       "toml" => OutputFormat::Toml,
-//       "yaml" => OutputFormat::Yaml,
-//     }
-//   }
-// }
-
 impl From<OutputFormat> for &'static str {
     fn from(value: OutputFormat) -> Self {
         match value {

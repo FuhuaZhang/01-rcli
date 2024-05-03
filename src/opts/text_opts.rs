@@ -6,12 +6,14 @@ use std::{
 
 use anyhow::{Error, Result};
 use clap::{Parser, Subcommand};
+use enum_dispatch::enum_dispatch;
 
 use crate::{process_generate, process_sign, process_verify, CmdExecutor};
 
 use super::verify_file;
 
 #[derive(Debug, Subcommand)]
+#[enum_dispatch(CmdExecutor)]
 pub enum TextSubCommand {
     #[command(name = "sign", about = "Sign a message with the specified key")]
     Sign(SignOpts),
@@ -19,16 +21,6 @@ pub enum TextSubCommand {
     Verify(VerifyOpts),
     #[command(name = "genkey", about = "Generate a random key")]
     Generate(GenerateOpts),
-}
-
-impl CmdExecutor for TextSubCommand {
-    async fn execute(self) -> anyhow::Result<()> {
-        match self {
-            TextSubCommand::Sign(opts) => opts.execute().await,
-            TextSubCommand::Verify(opts) => opts.execute().await,
-            TextSubCommand::Generate(opts) => opts.execute().await,
-        }
-    }
 }
 
 #[derive(Debug, Parser)]

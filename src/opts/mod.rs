@@ -7,6 +7,8 @@ mod text_opts;
 use clap::{Parser, Subcommand};
 use std::path::Path;
 
+use crate::CmdExecutor;
+
 pub use self::{
     base64_opts::{Base64Format, Base64SubCommand},
     csv_opts::{CsvOpts, OutputFormat},
@@ -29,14 +31,26 @@ pub enum SubCommand {
     #[command(name = "genpass", about = "Generate a random password")]
     Genpass(GenpassOpts),
 
-    #[command(subcommand)]
+    #[command(subcommand, about = "encode & decode with base64")]
     Base64(Base64SubCommand),
 
-    #[command(subcommand)]
+    #[command(subcommand, about = "sign & verify a text")]
     Text(TextSubCommand),
 
-    #[command(subcommand)]
+    #[command(subcommand, about = "serve static files")]
     Http(HttpSubCommand),
+}
+
+impl CmdExecutor for SubCommand {
+    async fn execute(self) -> anyhow::Result<()> {
+        match self {
+            SubCommand::Csv(csv_opts) => csv_opts.execute().await,
+            SubCommand::Genpass(genpass_opts) => genpass_opts.execute().await,
+            SubCommand::Base64(base64_sub_command) => base64_sub_command.execute().await,
+            SubCommand::Text(text_sub_command) => text_sub_command.execute().await,
+            SubCommand::Http(http_sub_command) => http_sub_command.execute().await,
+        }
+    }
 }
 
 fn verify_file(filename: &str) -> Result<String, &'static str> {

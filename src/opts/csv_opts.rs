@@ -3,6 +3,8 @@ use std::{fmt::Display, str::FromStr};
 use anyhow::{anyhow, Error};
 use clap::Parser;
 
+use crate::{process_csv, CmdExecutor};
+
 use super::verify_file;
 
 #[derive(Debug, Parser)]
@@ -21,6 +23,19 @@ pub struct CsvOpts {
 
     #[arg(short, long, default_value="json", value_parser=parse_format)]
     pub format: OutputFormat,
+}
+
+impl CmdExecutor for CsvOpts {
+    async fn execute(self) -> anyhow::Result<()> {
+        let output = if let Some(output) = self.output {
+            output
+        } else {
+            format!("output.{}", &self.format)
+        };
+
+        process_csv(&self.input, &output, self.format)?;
+        Ok(())
+    }
 }
 
 #[derive(Debug, Copy, Clone)]

@@ -1,7 +1,9 @@
 use std::str::FromStr;
 
-use anyhow::Error;
+use anyhow::{Error, Result};
 use clap::{Parser, Subcommand};
+
+use crate::{process_decode, process_encode, CmdExecutor};
 
 use super::verify_file;
 
@@ -13,6 +15,15 @@ pub enum Base64SubCommand {
     Decode(DecodeOpts),
 }
 
+impl CmdExecutor for Base64SubCommand {
+    async fn execute(self) -> Result<()> {
+        match self {
+            Base64SubCommand::Encode(encode_opts) => encode_opts.execute().await,
+            Base64SubCommand::Decode(decode_opts) => decode_opts.execute().await,
+        }
+    }
+}
+
 #[derive(Debug, Parser)]
 pub struct EncodeOpts {
     #[arg(short, long, value_parser=verify_file, default_value = "-")]
@@ -20,6 +31,21 @@ pub struct EncodeOpts {
 
     #[arg(short, long, value_parser=parse_base64_format, default_value = "standard")]
     pub format: Base64Format,
+}
+
+impl CmdExecutor for EncodeOpts {
+    async fn execute(self) -> Result<()> {
+        process_encode(&self.input, self.format)?;
+        Ok(())
+    }
+}
+
+impl CmdExecutor for DecodeOpts {
+    async fn execute(self) -> Result<()> {
+        let decoded = process_decode(&self.input, self.format)?;
+        println!("{:?}", String::from_utf8(decoded));
+        Ok(())
+    }
 }
 
 #[derive(Debug, Parser)]

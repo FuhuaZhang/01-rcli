@@ -1,15 +1,19 @@
+mod base64_opts;
 mod csv_opts;
-use std::path::Path;
+mod genpass_opts;
+mod http_opts;
+mod text_opts;
 
 use clap::{Parser, Subcommand};
-pub use csv_opts::{CsvOpts, OutputFormat};
+use std::path::Path;
 
-mod genpass_opts;
-pub use genpass_opts::GenpassOpts;
-
-mod base64_opts;
-pub use base64_opts::{Base64Format, Base64SubCommand};
-
+pub use self::{
+    base64_opts::{Base64Format, Base64SubCommand},
+    csv_opts::{CsvOpts, OutputFormat},
+    genpass_opts::GenpassOpts,
+    http_opts::HttpSubCommand,
+    text_opts::{TextSignFormat, TextSubCommand},
+};
 #[derive(Debug, Parser)]
 #[command(name = "rcli", version, author, about, long_about = None)]
 pub struct Opts {
@@ -27,9 +31,12 @@ pub enum SubCommand {
 
     #[command(subcommand)]
     Base64(Base64SubCommand),
+
+    #[command(subcommand)]
+    Text(TextSubCommand),
 }
 
-fn verify_input_file(filename: &str) -> Result<String, &'static str> {
+fn verify_file(filename: &str) -> Result<String, &'static str> {
     if filename == "-" || Path::new(filename).exists() {
         Ok(filename.into())
     } else {
@@ -43,9 +50,9 @@ mod tests {
 
     #[test]
     fn test_verify_input_file() {
-        assert_eq!(verify_input_file("-"), Ok("-".into()));
-        assert_eq!(verify_input_file("*"), Err("File does not exist"));
-        assert_eq!(verify_input_file("Cargo.toml"), Ok("Cargo.toml".into()));
-        assert_eq!(verify_input_file("not-exist"), Err("File does not exist"));
+        assert_eq!(verify_file("-"), Ok("-".into()));
+        assert_eq!(verify_file("*"), Err("File does not exist"));
+        assert_eq!(verify_file("Cargo.toml"), Ok("Cargo.toml".into()));
+        assert_eq!(verify_file("not-exist"), Err("File does not exist"));
     }
 }

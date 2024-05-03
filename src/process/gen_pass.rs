@@ -1,3 +1,4 @@
+use anyhow::Result;
 use rand::{seq::SliceRandom, Rng};
 use zxcvbn::zxcvbn;
 
@@ -13,7 +14,7 @@ pub fn process_genpass(
     lowercase: bool,
     number: bool,
     symbol: bool,
-) -> String {
+) -> Result<String> {
     let mut rng = rand::thread_rng();
     let mut password = Vec::new();
     let mut chars = Vec::new();
@@ -43,5 +44,5 @@ pub fn process_genpass(
     let password = String::from_utf8(password).unwrap();
     let estimation = zxcvbn(&password, &[]).unwrap();
     println!("Password: {}, Score: {}", password, estimation.score());
-    password
+    Ok(password)
 }

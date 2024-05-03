@@ -34,6 +34,9 @@ pub enum SubCommand {
 
     #[command(subcommand)]
     Text(TextSubCommand),
+
+    #[command(subcommand)]
+    Http(HttpSubCommand),
 }
 
 fn verify_file(filename: &str) -> Result<String, &'static str> {

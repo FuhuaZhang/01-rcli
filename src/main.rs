@@ -1,11 +1,14 @@
 use clap::Parser;
 use rcli::{
-    process_csv, process_decode, process_encode, process_generate, process_genpass, process_sign,
-    process_verify, Base64SubCommand, Opts, SubCommand, TextSignFormat, TextSubCommand,
+    process_csv, process_decode, process_encode, process_generate, process_genpass,
+    process_http_serve, process_sign, process_verify, Base64SubCommand, HttpSubCommand, Opts,
+    SubCommand, TextSignFormat, TextSubCommand,
 };
 use std::fs;
 
-fn main() -> anyhow::Result<()> {
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+    tracing_subscriber::fmt::init();
     let opts = Opts::parse();
     match opts.command {
         SubCommand::Csv(csv_opts) => {
@@ -63,6 +66,11 @@ fn main() -> anyhow::Result<()> {
                         fs::write(name.join("ed25519.pk"), &key[1])?;
                     }
                 }
+            }
+        },
+        SubCommand::Http(http_sub_command) => match http_sub_command {
+            HttpSubCommand::Serve(serve_opts) => {
+                process_http_serve(serve_opts.path, serve_opts.port).await?;
             }
         },
     }

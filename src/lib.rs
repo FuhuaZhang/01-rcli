@@ -1,7 +1,7 @@
 mod process;
 pub use process::{
-    process_csv, process_decode, process_encode, process_generate, process_genpass, process_sign,
-    process_verify,
+    process_csv, process_decode, process_encode, process_generate, process_genpass,
+    process_http_serve, process_sign, process_verify,
 };
 
 mod opts;

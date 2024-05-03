@@ -1,0 +1,2 @@
+### Test index
+GET http://localhost:3000/Cargo.toml

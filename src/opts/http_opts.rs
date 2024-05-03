@@ -10,7 +10,9 @@ pub enum HttpSubCommand {
 
 #[derive(Debug, Parser)]
 pub struct HttpServeOpts {
+    #[arg(long)]
     pub path: PathBuf,
 
+    #[arg(long)]
     pub port: u16,
 }

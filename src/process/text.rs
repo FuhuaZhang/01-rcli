@@ -1,6 +1,6 @@
 use std::{fs, io::Read, path::Path};
 
-use crate::{get_reader, opts::TextSignFormat, process_genpass};
+use crate::{cli::TextSignFormat, get_reader, process_genpass};
 use anyhow::{Ok, Result};
 use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine};
 use ed25519_dalek::{Signature, Signer, SigningKey, Verifier, VerifyingKey};

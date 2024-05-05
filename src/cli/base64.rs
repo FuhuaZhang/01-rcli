@@ -12,13 +12,13 @@ use super::verify_file;
 #[enum_dispatch(CmdExecutor)]
 pub enum Base64SubCommand {
     #[command(name = "encode", about = "encode")]
-    Encode(EncodeOpts),
+    Base64Encode(Base64EncodeOpts),
     #[command(name = "decode", about = "decode")]
-    Decode(DecodeOpts),
+    Base64Decode(Base64DecodeOpts),
 }
 
 #[derive(Debug, Parser)]
-pub struct EncodeOpts {
+pub struct Base64EncodeOpts {
     #[arg(short, long, value_parser=verify_file, default_value = "-")]
     pub input: String,
 
@@ -26,14 +26,14 @@ pub struct EncodeOpts {
     pub format: Base64Format,
 }
 
-impl CmdExecutor for EncodeOpts {
+impl CmdExecutor for Base64EncodeOpts {
     async fn execute(self) -> Result<()> {
         process_encode(&self.input, self.format)?;
         Ok(())
     }
 }
 
-impl CmdExecutor for DecodeOpts {
+impl CmdExecutor for Base64DecodeOpts {
     async fn execute(self) -> Result<()> {
         let decoded = process_decode(&self.input, self.format)?;
         println!("{:?}", String::from_utf8(decoded));
@@ -42,7 +42,7 @@ impl CmdExecutor for DecodeOpts {
 }
 
 #[derive(Debug, Parser)]
-pub struct DecodeOpts {
+pub struct Base64DecodeOpts {
     #[arg(short, long, value_parser=verify_file, default_value = "-")]
     pub input: String,
 

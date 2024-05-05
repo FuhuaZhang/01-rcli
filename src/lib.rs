@@ -5,11 +5,11 @@ pub use process::{
     process_http_serve, process_sign, process_verify,
 };
 
-mod opts;
-pub use opts::{
-    Base64SubCommand, CsvOpts, DecodeOpts, EncodeOpts, GenerateOpts, GenpassOpts, HttpServeOpts,
-    HttpSubCommand, Opts, OutputFormat, SignOpts, SubCommand, TextSignFormat, TextSubCommand,
-    VerifyOpts,
+mod cli;
+pub use cli::{
+    Base64DecodeOpts, Base64EncodeOpts, Base64SubCommand, CsvOpts, GenerateKeyOpts, GenpassOpts,
+    HttpServeOpts, HttpSubCommand, Opts, OutputFormat, SubCommand, TextSignFormat, TextSignOpts,
+    TextSubCommand, TextVerifyOpts,
 };
 
 mod utils;

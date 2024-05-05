@@ -1,7 +1,7 @@
 use base64::{engine::general_purpose, Engine};
 use std::io::Read;
 
-use crate::{get_reader, opts::Base64Format};
+use crate::{cli::Base64Format, get_reader};
 
 pub fn process_encode(input: &str, format: Base64Format) -> anyhow::Result<String> {
     let mut reader: Box<dyn Read> = get_reader(input)?;

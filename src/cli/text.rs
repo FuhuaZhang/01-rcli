@@ -16,15 +16,15 @@ use super::verify_file;
 #[enum_dispatch(CmdExecutor)]
 pub enum TextSubCommand {
     #[command(name = "sign", about = "Sign a message with the specified key")]
-    Sign(SignOpts),
+    TextSign(TextSignOpts),
     #[command(name = "verify", about = "Verify a signed message")]
-    Verify(VerifyOpts),
+    TextVerify(TextVerifyOpts),
     #[command(name = "genkey", about = "Generate a random key")]
-    Generate(GenerateOpts),
+    GenerateKey(GenerateKeyOpts),
 }
 
 #[derive(Debug, Parser)]
-pub struct SignOpts {
+pub struct TextSignOpts {
     #[arg(short, long, value_parser=verify_file, default_value = "-")]
     pub input: String,
 
@@ -35,7 +35,7 @@ pub struct SignOpts {
     pub format: TextSignFormat,
 }
 
-impl CmdExecutor for SignOpts {
+impl CmdExecutor for TextSignOpts {
     async fn execute(self) -> Result<()> {
         process_sign(&self.input, &self.key, self.format)?;
         Ok(())
@@ -43,7 +43,7 @@ impl CmdExecutor for SignOpts {
 }
 
 #[derive(Debug, Parser)]
-pub struct VerifyOpts {
+pub struct TextVerifyOpts {
     #[arg(short, long, value_parser=verify_file, default_value = "-")]
     pub input: String,
 
@@ -57,7 +57,7 @@ pub struct VerifyOpts {
     pub format: TextSignFormat,
 }
 
-impl CmdExecutor for VerifyOpts {
+impl CmdExecutor for TextVerifyOpts {
     async fn execute(self) -> Result<()> {
         process_verify(
             &self.input,
@@ -70,7 +70,7 @@ impl CmdExecutor for VerifyOpts {
 }
 
 #[derive(Debug, Parser)]
-pub struct GenerateOpts {
+pub struct GenerateKeyOpts {
     #[arg(short, long, default_value = "blake3", value_parser=parse_format)]
     pub format: TextSignFormat,
 
@@ -78,7 +78,7 @@ pub struct GenerateOpts {
     pub output: PathBuf,
 }
 
-impl CmdExecutor for GenerateOpts {
+impl CmdExecutor for GenerateKeyOpts {
     async fn execute(self) -> Result<()> {
         let key = process_generate(&self.format)?;
         match self.format {

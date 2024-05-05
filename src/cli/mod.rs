@@ -1,14 +1,14 @@
-mod base64_opts;
-mod csv_opts;
-mod genpass_opts;
-mod http_opts;
-mod text_opts;
+mod base64;
+mod csv;
+mod genpass;
+mod http;
+mod text;
 
+pub use self::{base64::*, csv::*, genpass::*, http::*, text::*};
 use clap::{Parser, Subcommand};
 use enum_dispatch::enum_dispatch;
 use std::path::Path;
 
-pub use self::{base64_opts::*, csv_opts::*, genpass_opts::*, http_opts::*, text_opts::*};
 #[derive(Debug, Parser)]
 #[command(name = "rcli", version, author, about, long_about = None)]
 pub struct Opts {

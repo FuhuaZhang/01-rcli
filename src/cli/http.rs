@@ -7,8 +7,8 @@ use crate::{process_http_serve, CmdExecutor};
 #[derive(Debug, Parser)]
 #[enum_dispatch(CmdExecutor)]
 pub enum HttpSubCommand {
-    #[command(about = "Serve a directory over HTTP")]
-    Serve(HttpServeOpts),
+    #[command(name = "serve", about = "Serve a directory over HTTP")]
+    HttpServe(HttpServeOpts),
 }
 
 #[derive(Debug, Parser)]
